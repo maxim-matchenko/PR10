@@ -1,31 +1,91 @@
-﻿//****************************************************************************
-//* Практическая работа N10                                                  *
-//* Выполнил: Матченко M.C., группа 2-ИСП-оКФ                                *
-//* Вариант 3                                                                *
-//* Задание: обработка двухмерных массивов.                                  *
-//****************************************************************************
 using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace PR10
+namespace PR_10
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main(string [] args)
         {
-            Console.Title = "Практическая работа №10"; // Заголовок консоли
+            Console.Title = "Практическая работа № 10";
             Console.BackgroundColor = ConsoleColor.Yellow;
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;
-            Console.Clear(); // Очистка консоли
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.Clear();
             Console.WriteLine("Здравствуйте!");
-            try
+
+            const int M = 4, N = 3;
+            Random rand = new Random();
+            char continueChoice;
+
+            do
             {
-                const
-            }
+                try
+                {
+                    int[,] matrix = new int[M, N];
+
+                    // Заполнение матрицы случайными числами в диапазоне [-27, 38] включительно
+                    for (int i = 0; i < M; i++)
+                    {
+                        for (int j = 0; j < N; j++)
+                        {
+                            matrix[i, j] = rand.Next(-27, 39);
+                        }
+                    }
+
+                    // Поиск наибольшего нечётного числа
+                    int? maxOdd = null;
+                    for (int i = 0; i < M; i++)
+                    {
+                        for (int j = 0; j < N; j++)
+                        {
+                            if (matrix[i, j] % 2 != 0)
+                            {
+                                if (maxOdd == null || matrix[i, j] > maxOdd)
+                                    maxOdd = matrix[i, j];
+                            }
+                        }
+                    }
+
+                    // Вывод матрицы с выделением найденного элемента красным цветом
+                    Console.WriteLine("\nМатрица:");
+                    for (int i = 0; i < M; i++)
+                    {
+                        for (int j = 0; j < N; j++)
+                        {
+                            if (maxOdd.HasValue && matrix[i, j] == maxOdd.Value)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write(matrix[i, j].ToString().PadRight(4));
+                                Console.ResetColor();
+                            }
+                            else
+                            {
+                                Console.Write(matrix[i, j].ToString().PadRight(4));
+                            }
+                        }
+                        Console.WriteLine();
+                    }
+
+                    if (maxOdd.HasValue)
+                        Console.WriteLine($"\nНаибольшее нечётное число: {maxOdd.Value}");
+                    else
+                        Console.WriteLine("\nНечётных чисел в матрице не найдено.");
+
+                    // Запрос на повторный расчёт
+                    Console.Write("\nВыполнить новый расчёт? (Y/N): ");
+                    string input = Console.ReadLine()?.Trim().ToUpper();
+                    continueChoice = string.IsNullOrEmpty(input) ? 'N' : input;
+                }
+                catch (Exception ex)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"\nЧто-то пошло не так. {ex.Message}");
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    continueChoice = 'N';
+                }
+            } while (continueChoice == 'Y');
+
+            Console.WriteLine("\nПрограмма завершена.");
+            Console.ReadKey();
         }
     }
 }
